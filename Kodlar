@@ -1,18 +1,32 @@
-                <PerformanceTable app={app} objectId={"b293143b-035d-47a4-9bf3-7f9aa4dd2448"}/>
-  useEffect(() => {
-  
-    if (!app) {
-      openApp(import.meta.env.VITE_APP_APP1)
-        .then((_app) => {      
-          setApp(_app);          
-        })
-        .catch((error) => {
-          //setError(true);
-          console.error('Uygulama başlatma hatası:', error);
-        });
-    } else {
-      console.log(app.selectionState().selections)
-  
-
-    }
-  }, [app])
+   <tbody>
+        <tr>
+          <th>İşkolu Yön.</th>
+          <td><div>%83</div></td>
+          <td><div>%83</div></td>
+          <td><div>%83</div></td>
+        </tr>
+        <tr>
+          <th>Ticari</th>
+          <td><div>%87</div></td>
+          <td><div>%87</div></td>
+          <td><div>%87</div></td>
+        </tr>
+        <tr>
+          <th>KOBİ</th>
+          <td><div>%88</div></td>
+          <td><div>%88</div></td>
+          <td><div>%88</div></td>
+        </tr>
+        <tr>
+          <th>Bireysel</th>
+          <td><div>%87</div></td>
+          <td><div>%87</div></td>
+          <td><div>%87</div></td>
+        </tr>
+        <tr>
+          <th>Bilanço Yön.</th>
+          <td><div>%88</div></td>
+          <td><div>%88</div></td>
+          <td><div>%88</div></td>
+        </tr>
+      </tbody>
