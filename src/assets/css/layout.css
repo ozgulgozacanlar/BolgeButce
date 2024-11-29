@@ -1,0 +1,129 @@
+:root {
+  --primaryColor: #666666;
+  --secondaryColor: #865a44;
+  --topbarHeight: 80px;
+  --topbarTabletHeight: 7rem;
+  --topbarMobileHeight: 9rem;
+  --fontFamily: 'benton_sans_bbvabook';
+  --topbarBackgroundColor: #fff;
+  --topbarTextColor: #ffffff;
+  --contentBackgroundColor: #f6f9fb;
+  --mainBlueColor: #004480;
+}
+
+body {
+  background-color: var(--contentBackgroundColor);
+  font-family: var(--fontFamily);
+}
+
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+p,
+li {
+  font-family: var(--fontFamily);
+  color: var(--primaryColor);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin-bottom: 0;
+}
+
+.main-wrapper {
+  background-color: var(--contentBackgroundColor);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--topbarTabletHeight));
+  flex-grow: 1;
+  -webkit-box-shadow: inset 2px 1px 8px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: inset 2px 1px 8px 3px rgba(0, 0, 0, 0.06);
+  overflow-y: auto;
+  padding-bottom: 2rem;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #bfbfbf;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 4px !important;
+  padding: 1rem;
+  border: none !important;
+  filter: drop-shadow(0px 0px 9px rgba(54, 54, 54, 0.04));
+  flex-grow: 1;
+  max-height: 500px;
+}
+
+.card .card-title {
+  color: #6a6a6a;
+  font-size: 1rem;
+  font-family: 'benton_sans_bbvamedium';
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  margin-bottom: 1rem !important;
+}
+
+.card .card-title-wrapper {
+  margin-bottom: 1rem;
+}
+
+.card .card-title-wrapper .card-title {
+  margin-bottom: 0 !important;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.detail-btn {
+  color: var(--mainBlueColor);
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: 'benton_sans_bbvamedium';
+  font-size: .9rem;
+}
+
+/* Modal */
+.modal-xxl {
+  max-width: 100%;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+/* End Modal */
+
+
+@media (min-width: 991px) {
+  .main-wrapper {
+    height: calc(100vh - var(--topbarHeight));
+  }
+}
+
+a:not([href]):not([class]),
+a:not([href]):not([class]):hover {
+  color: var(--primaryColor);
+}

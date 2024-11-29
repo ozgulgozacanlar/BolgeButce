@@ -1,0 +1,121 @@
+.sidemenu .menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  margin-block: 0.4rem;
+  width: 100%;
+  border-left: 4px solid transparent;
+  min-height: 3rem;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.sidemenu .menu-item span {
+  line-height: 1.2;
+  font-size: 15px;
+  font-family: var(--fontFamily);
+  font-weight: 500;
+  flex-grow: 1;
+  text-align: left;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity ease-in-out 0.2s;
+  min-width: 120px;
+}
+
+.sidemenu-wrapper.closed .menu-item span,
+.sidemenu-wrapper.closed .menu-item ul.submenu,
+.sidemenu-wrapper.closed .menu-item .down-chevron {
+  opacity: 0;
+}
+
+.menu-item svg.down-chevron {
+  height: 30px;
+  width: 30px;
+  transition: rotate ease-in-out 0.2s;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right: 1.5rem;
+}
+
+.menu-item svg.down-chevron.up {
+  align-self: center;
+  rotate: 180deg;
+}
+
+.menu-item a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+  flex-grow: 1;
+  width: 100%;
+  padding-left: 1rem;
+  text-decoration: none;
+  font-family: var(--fontFamily);
+  font-weight: 500;
+}
+
+.menu-item > a > span {
+  margin-left: 1rem;
+}
+
+.menu-item-icon {
+  min-width: var(--menuItemWidth);
+  fill: var(--primaryColor);
+}
+
+.menu-item a svg:not(.down-chevron) {
+  vertical-align: top;
+}
+
+.menu-item .submenu {
+  list-style: none;
+  padding-left: 0;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity ease-in-out 0.4s;
+}
+
+.menu-item .submenu.active {
+  height: 100%;
+  overflow: unset;
+  opacity: 1;
+}
+
+.menu-item .submenu li a {
+  align-items: flex-start;
+  text-align: left;
+  font-size: 14px;
+  font-family: var(--fontFamily);
+  font-weight: 400;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: calc(var(--menuItemWidth) + 2rem);
+}
+
+.sm-active > a {
+  font-family: var(--fontFamily) !important;
+  font-weight: 600 !important;
+  color: #002f62;
+}
+
+.menu-item .submenu li a:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+
+.menu-item:hover,
+.menu-item.active {
+  border-left: 4px solid #002f62;
+}
+
+.menu-item:hover span,
+.menu-item.active span {
+  font-family: var(--fontFamily);
+  font-weight: 600;
+}

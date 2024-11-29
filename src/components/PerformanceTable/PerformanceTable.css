@@ -1,0 +1,45 @@
+.performance-table {
+    table-layout: fixed;
+    width: 100%;
+    color: var(--primaryColor);
+    text-align: center;
+}
+
+.performance-table thead tr th {
+    font-size: 13px;
+    padding-bottom: .4rem;
+}
+
+.performance-table tbody tr td {
+    padding: 0 .7rem;
+}
+
+.performance-table tbody tr th{
+    text-align: end;
+    font-size: 14px;
+}
+
+.performance-table tbody tr:first-child td div {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.performance-table tbody tr:last-child td div {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.performance-table tbody tr:first-child td *,
+.performance-table tbody tr:last-child td *,
+.performance-table tbody tr:first-child th,
+.performance-table tbody tr:last-child th {
+    font-family: 'benton_sans_bbvamedium';
+}
+
+.performance-table tbody tr td div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f8fa;
+    height: 2.5rem;
+} 

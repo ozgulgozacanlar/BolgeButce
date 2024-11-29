@@ -1,0 +1,12 @@
+.error-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.error-wrapper > svg {
+    width: 10vw;
+    margin-bottom: 2.5rem;
+}

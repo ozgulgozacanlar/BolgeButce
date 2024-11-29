@@ -1,0 +1,45 @@
+.header-wrapper {
+  height: var(--topbarHeight);
+  background-color: var(--topbarBackgroundColor);
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 0.4rem;
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  width: 160px;
+  cursor: pointer;
+}
+
+.tab-wrapper {
+  display: flex;
+  column-gap: 1.5rem;
+}
+
+.tab-wrapper .tab-item.active,
+.tab-wrapper .tab-item:hover {
+  color: var(--mainBlueColor);
+  border-block: 3px solid;
+  /* font-family: 'benton_sans_bbvamedium'; */
+} 
+
+.tab-wrapper .tab-item {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  cursor: pointer;
+  padding-inline: 1.4rem;
+  color: #535353;
+  border-block: 3px solid transparent;
+}
+
+.user-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
