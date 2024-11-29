@@ -1,8 +1,45 @@
-  data.map((row, rowIndex) => (
+import React from 'react';
+
+const PerformanceTable = ({ data }) => {
+  // qText'i nokta ve boşluklardan arındıran fonksiyon
+  const cleanText = (text) => {
+    return text.replace(/[. ]/g, ''); // Noktayı ve boşluğu sil
+  };
+
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Başlık</th>
+          <th>Değer 1</th>
+          <th>Değer 2</th>
+          <th>Değer 3</th>
+        </tr>
+      </thead>
+      <tbody>
+        {/* Data varsa, map ile tabloyu oluştur */}
+        {data && data.length > 0 ? (
+          data.map((row, rowIndex) => (
             <tr key={rowIndex}>
-              {/* Her satırdaki qText'i td olarak ekle */}
-              {row.map((item, index) => (
-                <td key={index}>{item.qText}</td>
-              ))}
+              {/* İlk elemanı th olarak render et, diğerlerini td olarak */}
+              {row.map((item, index) => {
+                // Eğer bu row'un ilk elemanıysa <th> olarak render et
+                if (index === 0) {
+                  return <th key={index}>{cleanText(item.qText)}</th>;
+                }
+                // Diğer elemanlar <td> olarak render edilsin
+                return <td key={index}>{cleanText(item.qText)}</td>;
+              })}
             </tr>
           ))
+        ) : (
+          <tr>
+            <td colSpan="4">Veri bulunamadı</td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  );
+};
+
+export default PerformanceTable;
