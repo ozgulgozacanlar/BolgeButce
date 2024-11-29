@@ -1,13 +1,8 @@
- <tbody>
-        {/* Verileri işleme */}
-        {data.map((item, index) => (
-          <tr key={index}>
-            {/* İlk eleman qText'i th olarak ekle */}
-            {index === 0 ? (
-              <th>{item.qText}</th>
-            ) : (
-              <td>{item.qText}</td>
-            )}
-          </tr>
-        ))}
-      </tbody>
+  data.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {/* Her satırdaki qText'i td olarak ekle */}
+              {row.map((item, index) => (
+                <td key={index}>{item.qText}</td>
+              ))}
+            </tr>
+          ))
