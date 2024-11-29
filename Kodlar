@@ -1,0 +1,18 @@
+                <PerformanceTable app={app} objectId={"b293143b-035d-47a4-9bf3-7f9aa4dd2448"}/>
+  useEffect(() => {
+  
+    if (!app) {
+      openApp(import.meta.env.VITE_APP_APP1)
+        .then((_app) => {      
+          setApp(_app);          
+        })
+        .catch((error) => {
+          //setError(true);
+          console.error('Uygulama başlatma hatası:', error);
+        });
+    } else {
+      console.log(app.selectionState().selections)
+  
+
+    }
+  }, [app])
