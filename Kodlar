@@ -1,7 +1,14 @@
- const drawGaugeChart = () => {
-    const width = 400;  // Grafik boyutunu büyütüyoruz
-    const height = 250;
-    const radius = Math.min(width, height)/1.5;
+import React, { useRef, useEffect } from 'react';
+import * as d3 from 'd3';
+
+const GaugeChart = ({ value1, value2, value3, target, centerText }) => {
+  const svgRef = useRef(null);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const width = containerRef.current.offsetWidth;  // Kartın genişliği
+    const height = containerRef.current.offsetHeight;  // Kartın yüksekliği
+    const radius = Math.min(width, height) / 1.5;  // Yarıçapı, kart boyutuna göre ayarla
     const arcWidth = 16;  // Path'leri inceltiyoruz
     const gap = 5;  // Path'ler arasındaki boşluk (derece cinsinden)
 
@@ -9,7 +16,7 @@
       .attr("width", width)
       .attr("height", height)
       .append("g")
-      .attr("transform", `translate(${175},${215})`);
+      .attr("transform", `translate(${width / 2},${height - 30})`);  // Merkez koordinatları kart boyutuna göre ayarla
 
     // Dönüşüm (0-180 derece)
     const scale = d3.scaleLinear().domain([0, 100]).range([0, Math.PI]);
@@ -21,8 +28,7 @@
       .endAngle(d => scale(d))
       .cornerRadius(10);  // Path'lere yuvarlatma ekliyoruz
 
-    // Renkler: Açık kırmızı, turuncu, açık yeşil
-    const colors = ["#d46364", "#dc9465", "#7ca444"]; // Yeni renkler
+    const colors = ["#d46364", "#dc9465", "#7ca444"];  // Yeni renkler
 
     // Her dilimin başlangıç ve bitiş açılarını düzgün bir şekilde hesaplamak için
     const totalValue = value1 + value2 + value3;
@@ -114,17 +120,14 @@
       .style("font-size", "20px")
       .style("font-weight", "400")
       .text("100%");
-  }
 
+  }, [value1, value2, value3, target, centerText]);  // Bu değerler değiştiğinde yeniden çalıştır
 
- <div className="col-12 col-xl-3 d-flex">
-          <div className="card">
-            <div className="card-title">Nakit İşlem Süresi</div>
-            <div className="card-content">
-              <div className="">
-              <div className=""><GaugeChart app={app} objectId = {"AAtjmG"} value1={35} value2={35} value3={25} target={63.5} centerText={"Hedef Gerçekleşen"} /></div>
-              </div>
-              <GreyKpiCard text="Geçen Ay" app={app} objectId = {"NPVdyaj"}/>
-            </div>
-          </div>
-        </div>
+  return (
+    <div ref={containerRef} style={{ width: '100%', height: '300px' }}>  {/* Kartın boyutlarını belirliyoruz */}
+      <svg ref={svgRef}></svg>
+    </div>
+  );
+};
+
+export default GaugeChart;
