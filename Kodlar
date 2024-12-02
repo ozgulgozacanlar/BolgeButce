@@ -1,7 +1,1 @@
-// İki kat üst div'in genişliği ve yüksekliğini almak için
-const parentElement = svgContainer.node().parentNode.parentNode;  // Parent'ın parent'ı
-
-const width = parentElement.clientWidth;  // 2. parent div'in genişliği
-const height = parentElement.clientHeight;  // 2. parent div'in yüksekliği
-
-console.log(`Width: ${width}, Height: ${height}`);
+ <div className="detail-btn">Detaylar</div>
