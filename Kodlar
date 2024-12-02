@@ -1,14 +1,7 @@
-import React, { useRef, useEffect } from 'react';
-import * as d3 from 'd3';
-
-const GaugeChart = ({ value1, value2, value3, target, centerText }) => {
-  const svgRef = useRef(null);
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    const width = containerRef.current.offsetWidth;  // Kartın genişliği
-    const height = containerRef.current.offsetHeight;  // Kartın yüksekliği
-    const radius = Math.min(width, height) / 2.5;  // Yarıçapı, kart boyutuna göre ayarlıyoruz
+ const drawGaugeChart = () => {
+    const width = 400;  // Grafik boyutunu büyütüyoruz
+    const height = 250;
+    const radius = Math.min(width, height)/1.5;
     const arcWidth = 16;  // Path'leri inceltiyoruz
     const gap = 5;  // Path'ler arasındaki boşluk (derece cinsinden)
 
@@ -16,7 +9,7 @@ const GaugeChart = ({ value1, value2, value3, target, centerText }) => {
       .attr("width", width)
       .attr("height", height)
       .append("g")
-      .attr("transform", `translate(${width / 2},${height / 1.5})`);  // Grafik merkezi kartın ortasına yakın yerleşiyor
+      .attr("transform", `translate(${175},${215})`);
 
     // Dönüşüm (0-180 derece)
     const scale = d3.scaleLinear().domain([0, 100]).range([0, Math.PI]);
@@ -28,7 +21,8 @@ const GaugeChart = ({ value1, value2, value3, target, centerText }) => {
       .endAngle(d => scale(d))
       .cornerRadius(10);  // Path'lere yuvarlatma ekliyoruz
 
-    const colors = ["#d46364", "#dc9465", "#7ca444"];  // Yeni renkler
+    // Renkler: Açık kırmızı, turuncu, açık yeşil
+    const colors = ["#d46364", "#dc9465", "#7ca444"]; // Yeni renkler
 
     // Her dilimin başlangıç ve bitiş açılarını düzgün bir şekilde hesaplamak için
     const totalValue = value1 + value2 + value3;
@@ -67,7 +61,7 @@ const GaugeChart = ({ value1, value2, value3, target, centerText }) => {
       const y = (radius - arcWidth - 10) * Math.sin(angle); // Y koordinatı
       svg.append("circle")
         .attr("cx", x)
-        .attr("cy", y - 20)  // Y koordinatını biraz yukarı çekiyoruz
+        .attr("cy", y - 20)
         .attr("r", 14)  // Küçük daire boyutu
         .attr("fill", "#7ca444")  // Dairenin rengi
         .style("opacity", 0.8)  // Hafif parıltı efekti
@@ -76,7 +70,7 @@ const GaugeChart = ({ value1, value2, value3, target, centerText }) => {
       // İçeride beyaz bir daire ekle
       svg.append("circle")
         .attr("cx", x)
-        .attr("cy", y - 20)  // İç daireyi de aynı şekilde yerleştiriyoruz
+        .attr("cy", y - 20)
         .attr("r", 5)  // Küçük iç daire boyutu
         .attr("fill", "#FFFFFF")  // İç daire beyaz
         .style("opacity", 1);  // Tam görünürlük
@@ -89,7 +83,7 @@ const GaugeChart = ({ value1, value2, value3, target, centerText }) => {
     svg.append("text")
       .attr("class", "center-text")
       .attr("x", 0)
-      .attr("y", -40)  // Y koordinatını yukarı çekiyoruz
+      .attr("y", -40)
       .attr("text-anchor", "middle")
       .style("font-size", "40px")  // Font boyutunu biraz büyütüyoruz
       .style("font-weight", "600")
@@ -100,7 +94,7 @@ const GaugeChart = ({ value1, value2, value3, target, centerText }) => {
       .attr("x", 0)
       .attr("y", 10)
       .attr("text-anchor", "middle")
-      .style("font-size", "25px")  // Font boyutunu biraz büyütüyoruz
+      .style("font-size", "22px")  // Font boyutunu biraz büyütüyoruz
       .style("font-weight", "400")
       .text(centerText);
 
@@ -120,14 +114,4 @@ const GaugeChart = ({ value1, value2, value3, target, centerText }) => {
       .style("font-size", "20px")
       .style("font-weight", "400")
       .text("100%");
-
-  }, [value1, value2, value3, target, centerText]);  // Bu değerler değiştiğinde yeniden çalıştır
-
-  return (
-    <div ref={containerRef} style={{ width: '100%', height: '300px' }}>  {/* Kartın boyutlarını belirliyoruz */}
-      <svg ref={svgRef}></svg>
-    </div>
-  );
-};
-
-export default GaugeChart;
+  }
