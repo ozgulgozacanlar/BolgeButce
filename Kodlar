@@ -77,4 +77,34 @@ const drawGaugeChart = () => {
   svg.append("text")
     .attr("class", "center-text")
     .attr("x", 0)
-    .attr("y
+    .attr("y", -40)
+    .attr("text-anchor", "middle")
+    .style("font-size", "40px")
+    .style("font-weight", "600")
+    .text(`${target}%`);
+
+  svg.append("text")
+    .attr("class", "center-text")
+    .attr("x", 0)
+    .attr("y", 10)
+    .attr("text-anchor", "middle")
+    .style("font-size", "22px")
+    .style("font-weight", "400")
+    .text(centerText);
+
+  svg.append("text")
+    .attr("x", -radius + 10)
+    .attr("y", 35)
+    .attr("text-anchor", "middle")
+    .style("font-size", "20px")
+    .style("font-weight", "400")
+    .text("0%");
+
+  svg.append("text")
+    .attr("x", radius - 10)
+    .attr("y", 35)
+    .attr("text-anchor", "middle")
+    .style("font-size", "20px")
+    .style("font-weight", "400")
+    .text("100%");
+};
