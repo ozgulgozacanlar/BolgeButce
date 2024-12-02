@@ -7,3 +7,6 @@
                 <Route path="/detail" element={<Detail />} />
 
               </Routes>
+
+import { Link } from "react-router-dom";
+<Link to="/Detail" className="detail-btn">Detaylar</Link>
