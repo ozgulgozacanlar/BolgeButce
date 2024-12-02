@@ -1,1 +1,9 @@
  <div className="detail-btn">Detaylar</div>
+
+ <Routes>
+                <Route exact path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/detail" element={<Detail />} />
+
+              </Routes>
