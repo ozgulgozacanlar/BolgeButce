@@ -1,56 +1,17 @@
-const drawBarChart = () => {
-        const svg = d3.select(svgRef.current);
-        svg.selectAll('*').remove(); // Önceki içerikleri temizle
+   const data = [
+        {name: "A", value: 30},
+        {name: "B", value: 80},
+        {name: "C", value: 45},
+        {name: "D", value: 60},
+        {name: "E", value: 20},
+        {name: "F", value: 90},
+        {name: "G", value: 55},
+        {name: "H", value: 30},
+        {name: "I", value: 80},
+        {name: "J", value: 45},
+        {name: "K", value: 60},
+        {name: "L", value: 20},
+        {name: "M", value: 90},
+        {name: "N", value: 55}
 
-        const margin = { top: 20, right: 30, bottom: 40, left: 40 };
-        
-        const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
-        const height = svg.node().getBoundingClientRect().height - margin.top - margin.bottom;
-    
-        const x = d3.scaleLinear()
-          .domain([0, d3.max(data, d => d.value)])
-          .range([0, width]);
-    
-        const y = d3.scaleBand()
-          .domain(data.map(d => d.name))
-          .range([0, height])
-          .padding(0.1);
-    
-        // Grafik alanını oluşturma
-        const g = svg
-          .append("g")
-          .attr("transform", `translate(${margin.left},${margin.top})`);
-    
-        // X eksenini çizme
-        g.append("g")
-          .attr("class", "x-axis")
-          .attr("transform", `translate(0,${height})`)
-          .call(d3.axisBottom(x));
-    
-        // Y eksenini çizme
-        g.append("g")
-          .attr("class", "y-axis")
-          .call(d3.axisLeft(y));
-    
-        // Barlar (Çubuklar) ekleme
-        g.selectAll(".bar")
-          .data(data)
-          .enter().append("rect")
-          .attr("class", "bar")
-          .attr("x", 0)
-          .attr("y", d => y(d.name))
-          .attr("width", d => x(d.value))
-          .attr("height", y.bandwidth())
-          .attr("fill", "steelblue");
-    
-        // X ekseni etiketlerini yazma
-        g.selectAll(".x-label")
-          .data(data)
-          .enter().append("text")
-          .attr("class", "x-label")
-          .attr("x", d => x(d.value) + 5)
-          .attr("y", d => y(d.name) + y.bandwidth() / 2)
-          .attr("dy", ".35em")
-          .text(d => d.value)
-          .attr("fill", "black");
-    }
+      ];
