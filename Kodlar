@@ -1,71 +1,9 @@
-  useEffect(() => {
-        if (data.length === 0) return;
-    
-      
-       const svg = d3.select(svgRef.current);
-        svg.selectAll('*').remove(); // Önceki içerikleri temizle
-      
-        const margin = { top: 10, right: 20, bottom: 20, left: 30 };    
-        const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
-        const height = 1000; 
-      
-        svg
-          .attr("width", width)
-          .attr("height", height);
-      
-        const xScale = d3.scaleLinear()
-          .domain([0, d3.max(data, (d) => d.value)])
-          .range([0, width - margin.left - margin.right]);
-      
-        // Y ekseninin scale'ini name'e göre ayarlıyoruz
-        const yScale = d3.scaleBand()
-          .domain(data.map((d) => d.name))  // Y ekseni domain'ini 'name' üzerinden ayarlıyoruz
-          .range([margin.top, height - margin.bottom])
-          .padding(0.5);
-      
-        // Grafik alanını oluşturma
-        const g = svg.append("g")
-          .attr("transform", `translate(${margin.left},${margin.top})`);
-      
-        // X eksenini ekliyoruz
-        g.append("g")
-          .attr("class", "x-axis")
-          .attr("transform", `translate(0,${height - margin.bottom})`)
-          .call(d3.axisBottom(xScale).ticks(0));
-      
-        // Y eksenini ekliyoruz
-        g.append("g")
-          .attr("class", "y-axis")
-          .call(d3.axisLeft(yScale));
-      
-        // Bar çubuklarını ve değerleri çiziyoruz
-        const bars = g.selectAll(".bar")
-          .data(data);
-      
-        bars.enter()
-          .append("rect")
-          .attr("class", "bar")
-          .attr("x", 0) // X konumunu margin ile ayarlıyoruz
-          .attr("y", (d) => yScale(d.name)) // Y konumunu name'e göre ayarlıyoruz
-          .attr("width", (d) => xScale(d.value)) // X ekseni boyunca barın genişliği
-          .attr("height", yScale.bandwidth()) // Y eksenindeki her barın yüksekliği
-      
-        // Her barın sağındaki değerleri yazıyoruz
-        bars.enter()
-          .append("text")
-          .attr("class", "value")
-          .attr("x", (d) => xScale(d.value) + 5) // Çubuğun sağında değer
-          .attr("y", (d) => yScale(d.name) + yScale.bandwidth() / 2) // Y eksenindeki her barın ortasında
-          .attr("dy", ".35em")
-          .text((d) => d.name); // Değerlerin gösterimi
-      
-        // Y eksenindeki metinleri value olarak değiştiriyoruz
-        g.selectAll(".y-axis text")
-          .text((d) => {
-            // Y eksenindeki metni 'value' olarak değiştirmek
-            const matchingData = data.find(item => item.name === d); // 'name' ile eşleşen veriyi bul
-            return matchingData ? matchingData.value : d; // Eğer varsa, value'yu döndür, yoksa d'yi döndür
-          });
-      
-      }, [data]);
-  
+   // X ekseninin üzerine sabit uzunlukta bir path çizgisi ekliyoruz
+    const xAxisPosition = height - margin.bottom - 10; // X ekseninin biraz üstüne çizgi eklemek için konumu belirliyoruz
+    const fixedXAxisWidth = width - margin.left - margin.right; // Sabit X ekseni uzunluğu
+
+    g.append("path")
+      .attr("class", "x-axis-line")
+      .attr("d", `M0,${xAxisPosition} H${fixedXAxisWidth}`) // Sabit bir uzunlukta yatay çizgi çizeriz
+      .attr("stroke", "black")
+      .attr("stroke-width", 2); // Çizgi rengini ve kalınlığını ayarlıyoruz
