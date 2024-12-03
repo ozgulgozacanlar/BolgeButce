@@ -1,47 +1,36 @@
-  const y = d3.scaleBand()
-          .domain(data.map(d => d.name))
-          .range([0, height])
-          .padding(0.35);  // Bu değeri değiştirebilirsiniz, padding barlar arasındaki mesafeyi belirler
-    
-        // X eksenini tanımlama
-        const x = d3.scaleLinear()
-          .domain([0, d3.max(data, d => d.value)])
-          .range([0, width]);
-    
-        // Grafik alanını oluşturma
-        const g = svg
-          .append("g")
-          .attr("transform", `translate(${margin.left},${margin.top})`);
-    
-        // X eksenini çizme
-        g.append("g")
-          .attr("class", "x-axis")
-          .attr("transform", `translate(0,${height})`)
-          .call(d3.axisBottom(x));
-    
-        // Y eksenini çizme
-        g.append("g")
-          .attr("class", "y-axis")
-          .call(d3.axisLeft(y));
-    
-        // Barları ekleme
-        g.selectAll(".bar")
-          .data(data)
-          .enter().append("rect")
-          .attr("class", "bar")
-          .attr("x", 0)
-          .attr("y", d => y(d.name))
-          .attr("width", d => x(d.value))
-          .attr("height", y.bandwidth())
-          .attr("fill", "steelblue");
-    
-        // X eksenindeki etiketleri ekleme
-        g.selectAll(".x-label")
-          .data(data)
-          .enter().append("text")
-          .attr("class", "x-label")
-          .attr("x", d => x(d.value) + 5)
-          .attr("y", d => y(d.name) + y.bandwidth() / 2)
-          .attr("dy", ".35em")
-          .text(d => d.value)
-          .attr("fill", "black");
+  // Grafik alanını oluşturma
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);  // Grafik alanını yerleştirme
+
+  // X eksenini çizme
+  g.append("g")
+    .attr("class", "x-axis")
+    .attr("transform", `translate(0,${height})`) // X eksenini alttan yerleştir
+    .call(d3.axisBottom(x));
+
+  // Y eksenini çizme
+  g.append("g")
+    .attr("class", "y-axis")
+    .call(d3.axisLeft(y));
+
+  // Barları ekleme
+  g.selectAll(".bar")
+    .data(data)
+    .enter().append("rect")
+    .attr("class", "bar")
+    .attr("x", 0)  // Barın X konumunu 0 yapıyoruz
+    .attr("y", d => y(d.name))  // Y konumu, her barın konumu
+    .attr("width", d => x(d.value))  // Barın genişliği
+    .attr("height", y.bandwidth())  // Barın yüksekliği
+    .attr("fill", "steelblue");
+
+  // X eksenindeki etiketleri ekleme
+  g.selectAll(".x-label")
+    .data(data)
+    .enter().append("text")
+    .attr("class", "x-label")
+    .attr("x", d => x(d.value) + 5)  // Etiketleri çubuğun biraz sağında yerleştiriyoruz
+    .attr("y", d => y(d.name) + y.bandwidth() / 2)
+    .attr("dy", ".35em")  // Yüksekliğini ortalayıp ayarlamak için
+    .text(d => d.value)  // Değeri gösteriyoruz
+    .attr("fill", "black");
