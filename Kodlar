@@ -1,3 +1,77 @@
+import React, { useRef, useEffect } from 'react';
+import * as d3 from 'd3';
+
+const BarChart = ({ data }) => {
+  const svgRef = useRef();
+
+  useEffect(() => {
+    const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+    const width = 800 - margin.left - margin.right;
+    const height = 500 - margin.top - margin.bottom;
+
+    // SVG container
+    const svg = d3.select(svgRef.current)
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
+
+    // X ve Y skallarını tanımlıyoruz
+    const x = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.value)])
+      .range([0, width]);
+
+    const y = d3.scaleBand()
+      .domain(data.map(d => d.name))
+      .range([0, height])
+      .padding(0.1); // Barlar arasındaki mesafe
+
+    // Barları ekliyoruz
+    svg.selectAll('.bar')
+      .data(data)
+      .enter()
+      .append('rect')
+      .attr('class', 'bar')
+      .attr('x', 0)
+      .attr('y', d => y(d.name))
+      .attr('width', d => x(d.value))
+      .attr('height', y.bandwidth())
+      .attr('fill', '#4CAF50');
+
+    // X eksenini ekliyoruz
+    svg.append('g')
+      .selectAll('.tick')
+      .data(x.ticks(5))
+      .enter()
+      .append('line')
+      .attr('class', 'tick')
+      .attr('x1', d => x(d))
+      .attr('x2', d => x(d))
+      .attr('y1', 0)
+      .attr('y2', height)
+      .attr('stroke', '#000')
+      .attr('stroke-width', 0.5);
+
+    svg.append('g')
+      .attr('transform', `translate(0,${height})`)
+      .call(d3.axisBottom(x));
+
+    // Y eksenini ekliyoruz
+    svg.append('g')
+      .call(d3.axisLeft(y));
+
+  }, [data]);
+
+  return (
+    <div style={{ overflowY: 'scroll', height: '500px' }}>
+      <svg ref={svgRef}></svg>
+    </div>
+  );
+};
+
+export default BarChart;
+
+
 import React from 'react';
 import BarChart from './BarChart';
 
