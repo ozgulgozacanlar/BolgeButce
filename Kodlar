@@ -1,3 +1,2 @@
-.selectAll(".domain")  // X ekseninin çizgilerini hedefliyoruz
-      .attr("stroke", "white")  // Çizgilerin rengini beyaz yapıyoruz
-      .attr("stroke-width", 2);  // Çizgi kalınlığını ayarlıyoruz
+      .selectAll(".tick line") // Y eksenindeki tick çizgilerini hedefliyoruz
+      .remove(); // Tick çizgilerini kaldırıyoruz
