@@ -1,9 +1,3 @@
-   // X ekseninin üzerine sabit uzunlukta bir path çizgisi ekliyoruz
-    const xAxisPosition = height - margin.bottom - 10; // X ekseninin biraz üstüne çizgi eklemek için konumu belirliyoruz
-    const fixedXAxisWidth = width - margin.left - margin.right; // Sabit X ekseni uzunluğu
-
-    g.append("path")
-      .attr("class", "x-axis-line")
-      .attr("d", `M0,${xAxisPosition} H${fixedXAxisWidth}`) // Sabit bir uzunlukta yatay çizgi çizeriz
-      .attr("stroke", "black")
-      .attr("stroke-width", 2); // Çizgi rengini ve kalınlığını ayarlıyoruz
+.selectAll(".domain")  // X ekseninin çizgilerini hedefliyoruz
+      .attr("stroke", "white")  // Çizgilerin rengini beyaz yapıyoruz
+      .attr("stroke-width", 2);  // Çizgi kalınlığını ayarlıyoruz
