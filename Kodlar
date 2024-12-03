@@ -1,3 +1,10 @@
- <div className="card-content">
-              <HorizontalBarChart  app={app} objectId = {"286328fb-e24c-4a23-b937-c9f0b568407e"} />
-            </div>
+.card-content {
+  width: 100%; /* Tam genişlik */
+  height: 400px; /* Sabit yükseklik */
+  overflow: auto; /* İçerik taşarsa kaydırma çubuğu ekler */
+}
+
+.card-content svg {
+  width: 100%; /* Genişlik, container'a tam uyacak şekilde */
+  height: auto; /* Yükseklik otomatik olarak hesaplanır */
+}
