@@ -1,12 +1,88 @@
- <div className="detail-btn">Detaylar</div>
+  <svg width="600" height="400"></svg>
 
- <Routes>
-                <Route exact path="/" element={<Home />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/detail" element={<Detail />} />
+  <script>
+    // Veri seti
+    const data = [
+      {name: "A", value: 30},
+      {name: "B", value: 80},
+      {name: "C", value: 45},
+      {name: "D", value: 60},
+      {name: "E", value: 20},
+      {name: "F", value: 90},
+      {name: "G", value: 55}
+    ];
 
-              </Routes>
+    const svg = d3.select("svg");
+    const margin = {top: 20, right: 30, bottom: 40, left: 40};
+    const width = +svg.attr("width") - margin.left - margin.right;
+    const height = +svg.attr("height") - margin.top - margin.bottom;
 
-import { Link } from "react-router-dom";
-<Link to="/Detail" className="detail-btn">Detaylar</Link>
+    // Grafik alanı oluşturma
+    const g = svg.append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // X eksenini ölçeklendirme
+    const x = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.value)])  // Max değeri al
+      .range([0, width]);  // Grafik genişliği
+
+    // Y eksenini ölçeklendirme
+    const y = d3.scaleBand()
+      .domain(data.map(d => d.name))  // Y eksenindeki etiketler
+      .range([0, height])  // Grafik yüksekliği
+      .padding(0.1);  // Çubuklar arasındaki boşluk
+
+    // X ekseni
+    g.append("g")
+      .selectAll(".x-axis")
+      .data([0])
+      .enter().append("line")
+      .attr("x1", x(0))
+      .attr("x2", x(d3.max(data, d => d.value)))
+      .attr("y1", height)
+      .attr("y2", height)
+      .attr("stroke", "black")
+      .attr("stroke-width", 1);
+
+    // Y eksenini çizme
+    g.append("g")
+      .selectAll(".y-axis")
+      .data([0])
+      .enter().append("line")
+      .attr("x1", x(0))
+      .attr("x2", x(0))
+      .attr("y1", 0)
+      .attr("y2", height)
+      .attr("stroke", "black")
+      .attr("stroke-width", 1);
+
+    // Barlar (çubuklar)
+    g.selectAll(".bar")
+      .data(data)
+      .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", 0)
+      .attr("y", d => y(d.name))
+      .attr("width", d => x(d.value))  // Değer bazında genişlik
+      .attr("height", y.bandwidth())  // Çubuğun yüksekliği
+      .attr("fill", "steelblue");
+
+    // Y eksenindeki etiketleri ekleme
+    g.selectAll(".y-axis-label")
+      .data(data)
+      .enter().append("text")
+      .attr("class", "axis-label")
+      .attr("x", -10)
+      .attr("y", d => y(d.name) + y.bandwidth() / 2)
+      .attr("dy", ".35em")
+      .text(d => d.name);
+
+    // X ekseninin etiketlerini ekleme
+    g.selectAll(".x-axis-label")
+      .data(data)
+      .enter().append("text")
+      .attr("x", d => x(d.value) + 5)
+      .attr("y", d => y(d.name) + y.bandwidth() / 2)
+      .attr("dy", ".35em")
+      .text(d => d.value)
+      .attr("fill", "black");
