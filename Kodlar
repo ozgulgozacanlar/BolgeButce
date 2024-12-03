@@ -6,13 +6,13 @@ const drawBarChart = () => {
     const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
     const barHeight = 30; // Her bir barın yüksekliği
     const initialVisibleBars = 10; // Başlangıçta görünmesi gereken bar sayısı
-    const totalHeight = barHeight * data.length; // Tüm barların yüksekliği
+    const totalHeight = barHeight * data.length; // Tüm barların toplam yüksekliği
 
     // Y eksenindeki barlar arasındaki mesafeyi sabitlemek için scaleBand'de padding ekliyoruz.
     const y = d3.scaleBand()
         .domain(data.map(d => d.name))
-        .range([0, totalHeight])
-        .padding(0.35);  // Bu değeri değiştirebilirsiniz, padding barlar arasındaki mesafeyi belirler
+        .range([0, totalHeight]) // Bütün barlar için toplam yükseklik
+        .padding(0.35);  // Padding barlar arasındaki mesafeyi belirler
 
     // X eksenini tanımlama
     const x = d3.scaleLinear()
@@ -64,6 +64,6 @@ useEffect(() => {
 
 return (
     <div style={{ width: '100%', height: '400px', overflowY: 'auto' }}>
-        <svg ref={svgRef} style={{ width: '100%', height: '100%' }}></svg>
+        <svg ref={svgRef} style={{ width: '100%', height: 'auto' }}></svg>
     </div>
 );
