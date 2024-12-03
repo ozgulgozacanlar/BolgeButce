@@ -1,36 +1,59 @@
-  // Grafik alanını oluşturma
+ useEffect(() => {
+        if (data.length === 0) return;
+       
+        const svg = d3.select(svgRef.current);
+        svg.selectAll('*').remove(); // Önceki içerikleri temizle
+
+        const margin = { top: 10, right: 0, bottom: 20, left: 100 };    
+        const width = svg.node().getBoundingClientRect().width - margin.left/2;
+        const height = 500; 
+
+        svg
+          .attr("width", width)
+          .attr("height", height);
+    
+        const x = d3.scaleLinear()
+          .domain([0, d3.max(data, (d) => d.value)])
+          .range([0, width - margin.left - margin.right]);
+    
+        const y = d3.scaleBand()
+          .domain(data.map((d) => d.name))
+          .range([margin.top, height - margin.bottom])
+          .padding(0.2);
+      // Grafik alanını oluşturma
   const g = svg.append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);  // Grafik alanını yerleştirme
+  .attr("transform", `translate(${margin.left},${margin.top})`);  // Grafik alanını yerleştirme
 
-  // X eksenini çizme
-  g.append("g")
-    .attr("class", "x-axis")
-    .attr("transform", `translate(0,${height})`) // X eksenini alttan yerleştir
-    .call(d3.axisBottom(x));
+// X eksenini çizme
+g.append("g")
+  .attr("class", "x-axis")
+  .attr("transform", `translate(0,${height})`) // X eksenini alttan yerleştir
+  .call(d3.axisBottom(x).ticks(5));
 
-  // Y eksenini çizme
-  g.append("g")
-    .attr("class", "y-axis")
-    .call(d3.axisLeft(y));
+// Y eksenini çizme
+g.append("g")
+  .attr("class", "y-axis")
+  .call(d3.axisLeft(y));
 
-  // Barları ekleme
-  g.selectAll(".bar")
-    .data(data)
-    .enter().append("rect")
-    .attr("class", "bar")
-    .attr("x", 0)  // Barın X konumunu 0 yapıyoruz
-    .attr("y", d => y(d.name))  // Y konumu, her barın konumu
-    .attr("width", d => x(d.value))  // Barın genişliği
-    .attr("height", y.bandwidth())  // Barın yüksekliği
-    .attr("fill", "steelblue");
+// Barları ekleme
+g.selectAll(".bar")
+  .data(data)
+  .enter().append("rect")
+  .attr("class", "bar")
+  .attr("x", 0)  // Barın X konumunu 0 yapıyoruz
+  .attr("y", d => y(d.name))  // Y konumu, her barın konumu
+  .attr("width", d => x(d.value))  // Barın genişliği
+  .attr("height", y.bandwidth())  // Barın yüksekliği
 
-  // X eksenindeki etiketleri ekleme
-  g.selectAll(".x-label")
-    .data(data)
-    .enter().append("text")
-    .attr("class", "x-label")
-    .attr("x", d => x(d.value) + 5)  // Etiketleri çubuğun biraz sağında yerleştiriyoruz
-    .attr("y", d => y(d.name) + y.bandwidth() / 2)
-    .attr("dy", ".35em")  // Yüksekliğini ortalayıp ayarlamak için
-    .text(d => d.value)  // Değeri gösteriyoruz
-    .attr("fill", "black");
+// X eksenindeki etiketleri ekleme
+g.selectAll(".x-label")
+  .data(data)
+  .enter().append("text")
+  .attr("class", "x-label")
+  .attr("x", d => x(d.value) + 5)  // Etiketleri çubuğun biraz sağında yerleştiriyoruz
+  .attr("y", d => y(d.name) + y.bandwidth() / 2)
+  .attr("dy", ".35em")  // Yüksekliğini ortalayıp ayarlamak için
+  .text(d => d.value)  // Değeri gösteriyoruz
+  .attr("fill", "black");
+  
+    }, [data]);
