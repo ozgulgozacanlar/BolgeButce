@@ -4,14 +4,14 @@ const drawBarChart = () => {
 
     const margin = { top: 20, right: 30, bottom: 40, left: 40 };
     const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
-    const heightPerBar = 30; // Her barın yüksekliği
+    const barHeight = 30; // Her bir barın yüksekliği
     const initialVisibleBars = 10; // Başlangıçta görünmesi gereken bar sayısı
-    const height = heightPerBar * initialVisibleBars; // İlk 10 bar için yükseklik
+    const totalHeight = barHeight * data.length; // Tüm barların yüksekliği
 
     // Y eksenindeki barlar arasındaki mesafeyi sabitlemek için scaleBand'de padding ekliyoruz.
     const y = d3.scaleBand()
         .domain(data.map(d => d.name))
-        .range([0, height])
+        .range([0, totalHeight])
         .padding(0.35);  // Bu değeri değiştirebilirsiniz, padding barlar arasındaki mesafeyi belirler
 
     // X eksenini tanımlama
@@ -27,7 +27,7 @@ const drawBarChart = () => {
     // X eksenini çizme
     g.append("g")
         .attr("class", "x-axis")
-        .attr("transform", `translate(0,${height})`)
+        .attr("transform", `translate(0,${totalHeight})`)
         .call(d3.axisBottom(x));
 
     // Y eksenini çizme
@@ -63,7 +63,7 @@ useEffect(() => {
 }, [data]);
 
 return (
-    <div style={{ width: '100%', height: '400px', overflowY: 'scroll' }}>
-        <svg ref={svgRef} style={{ width: '100%', height: 'auto' }}></svg>
+    <div style={{ width: '100%', height: '400px', overflowY: 'auto' }}>
+        <svg ref={svgRef} style={{ width: '100%', height: '100%' }}></svg>
     </div>
 );
