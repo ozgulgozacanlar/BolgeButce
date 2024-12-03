@@ -15,3 +15,7 @@
         {name: "N", value: 55}
 
       ];
+const data = incomingData.map(item => ({
+    value: parseFloat(item[0].qText), // qText değeri float olarak alınır
+    name: item[1].qText // qText değeri name olarak alınır
+}));
