@@ -33,7 +33,7 @@ const BarChart = ({ data }) => {
       .append('rect')
       .attr('class', 'bar')
       .attr('x', 0)
-      .attr('y', d => y(d.name))
+      .attr('y', (d, i) => y(d.name))  // Y pozisyonu
       .attr('width', d => x(d.value))
       .attr('height', y.bandwidth())
       .attr('fill', '#4CAF50');
@@ -63,44 +63,10 @@ const BarChart = ({ data }) => {
   }, [data]);
 
   return (
-    <div style={{ overflowY: 'scroll', height: '500px' }}>
+    <div style={{ overflowY: 'auto', height: '500px' }}>
       <svg ref={svgRef}></svg>
     </div>
   );
 };
 
 export default BarChart;
-
-
-import React from 'react';
-import BarChart from './BarChart';
-
-const App = () => {
-  const data = [
-    { name: 'Apple', value: 120 },
-    { name: 'Banana', value: 150 },
-    { name: 'Orange', value: 180 },
-    { name: 'Pineapple', value: 200 },
-    { name: 'Strawberry', value: 250 },
-    { name: 'Mango', value: 300 },
-    { name: 'Grapes', value: 350 },
-    { name: 'Papaya', value: 500 },
-    { name: 'Watermelon', value: 600 },
-    { name: 'Blueberry', value: 700 },
-    { name: 'Peach', value: 800 },
-    { name: 'Plum', value: 1000 },
-    { name: 'Pear', value: 1100 },
-    { name: 'Avocado', value: 1300 },
-    { name: 'Coconut', value: 1400 },
-    { name: 'Lemon', value: 1600 }
-  ];
-
-  return (
-    <div className="App">
-      <h1>Yatay Bar Grafiği</h1>
-      <BarChart data={data} />
-    </div>
-  );
-};
-
-export default App;
