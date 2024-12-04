@@ -7,4 +7,6 @@
             .attr('cx', d => x(parseDate(translateMonthToEnglish(d.date))))
             .attr('cy', d => y(d.value1))
             .attr('r', 5)
-            .attr('fill', '#2b85c9');
+               .attr('fill', 'none')  // İçini boş bırakıyoruz
+    .attr('stroke', '#2b85c9')  // Kenarlık rengini mavi yapıyoruz
+    .attr('stroke-width', 2);  // Kenarlık kalınlığı
