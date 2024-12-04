@@ -1,1 +1,32 @@
- `${matchingData.value}%` : `${d}%`
+[
+    {
+        "date": "Kas-23",
+        "value1": 119,
+        "value2": 115
+    },
+    {
+        "date": "Ara-23",
+        "value1": 117,
+        "value2": 117
+    },
+    {
+        "date": "Oca-24",
+        "value1": 97,
+        "value2": 103
+    },
+    {
+        "date": "Şub-24",
+        "value1": 100,
+        "value2": 103
+    },
+    {
+        "date": "Mar-24",
+        "value1": 104,
+        "value2": 100
+    },
+    {
+        "date": "Nis-24",
+        "value1": 106,
+        "value2": 102
+    }
+]
