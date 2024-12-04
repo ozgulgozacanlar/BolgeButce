@@ -1,4 +1,18 @@
-  const drawLineChart = () => {
+// Y eksenindeki metinleri gizlemek için
+g.selectAll('.y-axis .tick text')
+    .style('display', 'none');  // Metinleri gizli yapıyoruz
+
+
+
+
+
+
+
+
+
+
+
+const drawLineChart = () => {
         const svg = d3.select(svgRef.current);
         svg.selectAll('*').remove();
         const margin = { top: 20, right: 20, bottom: 100, left: 20 };
