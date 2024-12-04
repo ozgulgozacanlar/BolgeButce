@@ -1,4 +1,7 @@
-    const drawLineChart = () => {
+    // D3 zaman formatı için Türkçe ay adlarını desteklemek amacıyla timeParse kullanabiliriz.
+    const parseDate = d3.timeParse("%b-%y"); // "Kas-23" gibi formatı kabul eder
+
+const drawLineChart = () => {
         const svg = d3.select(svgRef.current);
         // SVG içeriğini temizle (Refresh işleminden önce)
         svg.selectAll('*').remove();
