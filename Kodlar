@@ -1,32 +1,160 @@
-[
-    {
-        "date": "Kas-23",
-        "value1": 119,
-        "value2": 115
-    },
-    {
-        "date": "Ara-23",
-        "value1": 117,
-        "value2": 117
-    },
-    {
-        "date": "Oca-24",
-        "value1": 97,
-        "value2": 103
-    },
-    {
-        "date": "Şub-24",
-        "value1": 100,
-        "value2": 103
-    },
-    {
-        "date": "Mar-24",
-        "value1": 104,
-        "value2": 100
-    },
-    {
-        "date": "Nis-24",
-        "value1": 106,
-        "value2": 102
-    }
-]
+const data = [
+    { date: "Kas-23", value1: 119, value2: 115 },
+    { date: "Ara-23", value1: 117, value2: 117 },
+    { date: "Oca-24", value1: 97, value2: 103 },
+    { date: "Şub-24", value1: 100, value2: 103 },
+    { date: "Mar-24", value1: 104, value2: 100 },
+    { date: "Nis-24", value1: 106, value2: 102 }
+];
+
+const drawLineChart = () => {
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
+    const margin = { top: 20, right: 40, bottom: 100, left: 50 };
+    const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
+    const height = svg.node().getBoundingClientRect().height - margin.top - margin.bottom;
+
+    const g = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+    // Tarih formatını uygun bir Date objesine dönüştüren parse fonksiyonu
+    const parseDate = d3.timeParse("%b-%y");  // "%b-%y" Kas-23 gibi formatları işlemek için
+
+    // Y ekseninin üst sınırını biraz genişletmek için maksimum değerin üzerine ekleme yapalım
+    const maxValue = d3.max(data, d => Math.max(d.value1, d.value2));
+    const yMax = Math.ceil(maxValue / 20) * 20 + 20;
+
+    const x = d3.scaleTime()
+        .domain(d3.extent(data, d => parseDate(d.date)))  // Tarihleri parseDate fonksiyonu ile işliyoruz
+        .range([50, width]);
+
+    const y = d3.scaleLinear()
+        .domain([0, yMax])
+        .nice()
+        .range([height, 0]);
+
+    const xAxis = d3.axisBottom(x)
+        .tickValues(   // Her bir tarih sadece bir kez görünsün
+            Array.from(new Set(data.map(d => parseDate(d.date).getTime())))  // Tarihleri benzersiz hale getiriyoruz
+                .map(d => new Date(d)) // Set içerisindeki tarihleri tekrar Date objelerine dönüştürüyoruz
+        )
+        .tickFormat(d3.timeFormat("%b %y"))  // Ay ve yıl formatında gösterecek şekilde düzenliyoruz
+        .tickSize(0);
+
+    const yAxis = d3.axisLeft(y)
+        .tickValues(d3.range(0, yMax, 20))
+        .tickSize(-width);
+
+    g.append('g')
+        .attr('class', 'x-axis')
+        .attr('transform', `translate(0, ${height})`)
+        .call(xAxis);
+
+    g.append('g')
+        .attr('class', 'y-axis')
+        .call(yAxis)
+        .selectAll('.domain')
+        .remove();
+
+    g.selectAll('.y-axis .tick line')
+        .style('stroke', '#d3d3d3')
+        .style('stroke-width', 1);
+
+    const line1 = d3.line()
+        .x(d => x(parseDate(d.date)))  // Tarihleri parse ediyoruz
+        .y(d => y(d.value1));
+
+    const line2 = d3.line()
+        .x(d => x(parseDate(d.date)))  // Tarihleri parse ediyoruz
+        .y(d => y(d.value2));
+
+    g.append('path')
+        .data([data])
+        .attr('class', 'line')
+        .attr('d', line1)
+        .attr('stroke', 'steelblue')
+        .attr('fill', 'none')
+        .attr('stroke-width', 2);
+
+    g.append('path')
+        .data([data])
+        .attr('class', 'line')
+        .attr('d', line2)
+        .attr('stroke', 'orange')
+        .attr('fill', 'none')
+        .attr('stroke-width', 2);
+
+    g.selectAll('.circle1')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('class', 'circle1')
+        .attr('cx', d => x(parseDate(d.date)))
+        .attr('cy', d => y(d.value1))
+        .attr('r', 5)
+        .attr('fill', 'steelblue');
+
+    g.selectAll('.label1')
+        .data(data)
+        .enter()
+        .append('text')
+        .attr('class', 'label1')
+        .attr('x', d => x(parseDate(d.date)))
+        .attr('y', d => y(d.value1) - 10)
+        .attr('text-anchor', 'middle')
+        .style('fill', 'steelblue')
+        .style('font-size', '10px')
+        .text(d => d.value1);
+
+    g.selectAll('.circle2')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('class', 'circle2')
+        .attr('cx', d => x(parseDate(d.date)))
+        .attr('cy', d => y(d.value2))
+        .attr('r', 5)
+        .attr('fill', 'orange');
+
+    g.selectAll('.label2')
+        .data(data)
+        .enter()
+        .append('text')
+        .attr('class', 'label2')
+        .attr('x', d => x(parseDate(d.date)))
+        .attr('y', d => y(d.value2) - 10)
+        .attr('text-anchor', 'middle')
+        .style('fill', 'orange')
+        .style('font-size', '10px')
+        .text(d => d.value2);
+
+    const legend = g.append('g')
+        .attr('transform', `translate(${width / 2 - 80}, ${height + 40})`);
+
+    legend.append('rect')
+        .attr('x', -15)
+        .attr('y', -10)
+        .attr('width', 10)
+        .attr('height', 10)
+        .attr('fill', 'steelblue');
+
+    legend.append('text')
+        .attr('x', 0)
+        .attr('y', 0)
+        .style('fill', 'steelblue')
+        .style('font-size', '12px')
+        .text('Value 1');
+
+    legend.append('rect')
+        .attr('x', 65)
+        .attr('y', -10)
+        .attr('width', 10)
+        .attr('height', 10)
+        .attr('fill', 'orange');
+
+    legend.append('text')
+        .attr('x', 80)
+        .attr('y', 0)
+        .style('fill', 'orange')
+        .style('font-size', '12px')
+        .text('Value 2');
+};
