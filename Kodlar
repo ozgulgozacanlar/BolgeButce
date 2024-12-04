@@ -1,8 +1,9 @@
-
-        bars.enter()
-            .append("rect")
-            .attr("class", "bar")
-            .attr("x", 0) 
-            .attr("y", (d) => yScale(d.name)) // Y konumunu name'e göre ayarlıyoruz
-            .attr("width", (d) => xScale(d.value)) // X ekseni boyunca barın genişliği
-            .attr("height", yScale.bandwidth()) // Y eksenindeki her barın yüksekliği
+   .attr("fill", (d) => {
+        // Burada d.region veya d.branch gibi bir veri kontrolü yapabilirsiniz
+        if (d.type === "region") {
+            return "blue"; // Bölgeye mavi renk
+        } else if (d.type === "branch") {
+            return "green"; // Şubeye yeşil renk
+        }
+        return "gray"; // Varsayılan renk
+    });
