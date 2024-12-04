@@ -1,7 +1,10 @@
-  g.append('path')
-            .data([data])
-            .attr('class', 'line')
-            .attr('d', line2)
-            .attr('stroke', '#a1c789')
-            .attr('fill', 'none')
-            .attr('stroke-width', 2);
+    
+        g.selectAll('.circle1')
+            .data(data)
+            .enter()
+            .append('circle')
+            .attr('class', 'circle1')
+            .attr('cx', d => x(parseDate(translateMonthToEnglish(d.date))))
+            .attr('cy', d => y(d.value1))
+            .attr('r', 5)
+            .attr('fill', '#2b85c9');
