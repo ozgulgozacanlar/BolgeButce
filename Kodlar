@@ -1,7 +1,8 @@
-// Y eksenindeki metinleri gizlemek için
-g.selectAll('.y-axis .tick text')
-    .style('display', 'none');  // Metinleri gizli yapıyoruz
-
+// Y eksenindeki çizgileri (ticks) sadece ortada bir tane göstermeye karar veriyoruz
+g.selectAll('.y-axis .tick line')
+    .filter((d, i) => i === Math.floor(d3.range(0, yMax, 20).length / 2)) // Sadece ortadaki çizgiyi seçiyoruz
+    .style('stroke', '#d3d3d3') // Soluk gri renk
+    .style('stroke-width', 1); // Çizgi kalınlığı
 
 
 
