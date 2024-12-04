@@ -1,10 +1,5 @@
-// X eksenini yatay olarak genişletmek için yeni bir path ekliyoruz
-g.append('path')
-    .attr('class', 'x-axis-line')
-    .attr('d', `M0,${height} H${width}`)  // Bu, çizgiyi 0'dan width'e kadar uzatacak
-    .attr('stroke', '#000')  // Çizgi rengini siyah yapıyoruz
-    .attr('stroke-width', 2);  // Çizgi kalınlığını ayarlıyoruz
-
+const legend = g.append('g')
+    .attr('transform', `translate(${width - 120}, 20)`);  // Sağ üst köşeye yerleştiriyoruz
 
 
 
