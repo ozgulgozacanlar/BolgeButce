@@ -1,12 +1,9 @@
-const yAxis = d3.axisLeft(y)
-    .tickValues([Math.floor(yMax / 2)])  // Y ekseninde sadece ortadaki değeri göstereceğiz
-    .tickSize(-width)  // Bu, Y eksenindeki çizgiyi yatay olarak çizecek
-    .tickFormat(d3.format('d'));  // Formatı ayarlıyoruz, isterseniz 'd' yerine uygun bir format kullanabilirsiniz
-
-g.append('g')
-    .attr('class', 'y-axis')
-    .call(yAxis);
-
+// X eksenini yatay olarak genişletmek için yeni bir path ekliyoruz
+g.append('path')
+    .attr('class', 'x-axis-line')
+    .attr('d', `M0,${height} H${width}`)  // Bu, çizgiyi 0'dan width'e kadar uzatacak
+    .attr('stroke', '#000')  // Çizgi rengini siyah yapıyoruz
+    .attr('stroke-width', 2);  // Çizgi kalınlığını ayarlıyoruz
 
 
 
