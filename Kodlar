@@ -1,14 +1,11 @@
-   const drawLineChart = () => {
-        const svg = d3.select(svgRef.current);
-        // SVG içeriğini temizle (Refresh işleminden önce)
-        svg.selectAll('*').remove();
-        const margin = { top: 20, right: 40, bottom: 100, left: 50 };
-        const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
-        const height = svg.node().getBoundingClientRect().height - margin.top - margin.bottom;
-    
-        // Çizim alanı
-        const g = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
-    
+import { useState, useEffect, useRef } from 'react';
+import * as d3 from 'd3';
+
+const LineChart = ({ initialData }) => {
+    const svgRef = useRef();
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
         const monthMap = {
             "Oca": "Jan",
             "Şub": "Feb",
@@ -23,82 +20,87 @@
             "Kas": "Nov",
             "Ara": "Dec"
         };
-        
-        // D3 zaman formatı için Türkçe ay adlarını desteklemek amacıyla timeParse kullanabiliriz.
+
         const parseDate = d3.timeParse("%b-%y"); // "Kas-23" gibi formatı kabul eder
-        
+
         // Veriyi tarih formatına çevirme
-        const updatedData = data.map(d => {
-            // Türkçe ay adlarını İngilizce'ye çeviriyoruz
+        const updatedData = initialData.map(d => {
             const englishMonth = monthMap[d.date.substring(0, 3)];
-            const formattedDate = `${englishMonth}-${d.date.substring(4)}`; // Ayı çevirdikten sonra formatı oluşturuyoruz
-            const parsedDate = parseDate(formattedDate); // Burada tarihi parse ediyoruz
-            console.log(parsedDate);  // Burada date objesini yazdırıyoruz
-        
+            const formattedDate = `${englishMonth}-${d.date.substring(4)}`; 
+            const parsedDate = parseDate(formattedDate);
+
             return {
-                date: parsedDate, // Burada tarihleri dönüştürüyoruz
+                date: parsedDate, 
                 value1: d.value1,
                 value2: d.value2
             };
-        }).filter(d => d.date !== null);  // null olmayan tarihleri almak
-        
-        console.log(updatedData);  // Güncellenmiş veriyi yazdırıyoruz
-        setData(updatedData);
-    
+        }).filter(d => d.date !== null);  
+
+        setData(updatedData); // updatedData'yı state'e aktar
+
+    }, [initialData]);  // initialData değiştiğinde useEffect tetiklenecek
+
+    useEffect(() => {
+        if (data.length === 0) return;
+
+        const svg = d3.select(svgRef.current);
+        svg.selectAll('*').remove();
+        const margin = { top: 20, right: 40, bottom: 100, left: 50 };
+        const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
+        const height = svg.node().getBoundingClientRect().height - margin.top - margin.bottom;
+
+        const g = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
+
         // Y ekseninin üst sınırını biraz genişletmek için maksimum değerin üzerine ekleme yapalım
         const maxValue = d3.max(data, d => Math.max(d.value1, d.value2));
-        const yMax = Math.ceil(maxValue / 20) * 20 + 20; // Y ekseninin üst sınırını 20'şer artışla ayarlıyoruz
-    
-        // Zaman (X) ve lineer (Y) ölçekler
+        const yMax = Math.ceil(maxValue / 20) * 20 + 20;
+
         const x = d3.scaleTime()
-            .domain(d3.extent(data, d => d.date)) // Tarih aralığını belirliyoruz
-            .range([50, width]); // Burada X eksenini 50px kaydırıyoruz
-    
+            .domain(d3.extent(data, d => d.date)) 
+            .range([50, width]);
+
         const y = d3.scaleLinear()
             .domain([0, yMax])
             .nice()
             .range([height, 0]);
-    
-        // X ve Y eksenleri
+
         const xAxis = d3.axisBottom(x)
             .tickValues(   // Her bir tarih sadece bir kez görünsün
-                Array.from(new Set(data.map(d => d.date.getTime())))  // Tarihleri benzersiz hale getiriyoruz
-                    .map(d => new Date(d)) // Set içerisindeki tarihleri tekrar Date objelerine dönüştürüyoruz
+                Array.from(new Set(data.map(d => d.date.getTime())))  
+                    .map(d => new Date(d)) 
             )
-            .tickFormat(d3.timeFormat("%b %d"))  // Ay ve gün formatında gösterecek şekilde düzenliyoruz
+            .tickFormat(d3.timeFormat("%b %d")) 
             .tickSize(0);
-    
+
         const yAxis = d3.axisLeft(y)
-            .tickValues(d3.range(0, yMax, 20)) // 0'dan başlayarak 20'şer artacak şekilde
-            .tickSize(-width);  // Y ekseni tick'lerinin uzunluğunu X ekseninin genişliği kadar uzat
-    
+            .tickValues(d3.range(0, yMax, 20)) 
+            .tickSize(-width);  
+
         // Eksenlerin eklenmesi
         g.append('g')
             .attr('class', 'x-axis')
-            .attr('transform', `translate(0, ${height})`) // X ekseninin konumunu burada ayarlanır
+            .attr('transform', `translate(0, ${height})`) 
             .call(xAxis);
-    
+
         g.append('g')
             .attr('class', 'y-axis')
             .call(yAxis)
-            .selectAll('.domain')  // Y eksenindeki çizgiyi (domain) silinir
+            .selectAll('.domain')  
             .remove();
-    
-        // Y eksenindeki tick'lere soluk gri renk verme kısmı
+
         g.selectAll('.y-axis .tick line')
-            .style('stroke', '#d3d3d3')  // Soluk gri renk
-            .style('stroke-width', 1);  // Çizgi kalınlığı
-    
-        // Line generator'ları
+            .style('stroke', '#d3d3d3')
+            .style('stroke-width', 1); 
+
         const line1 = d3.line()
-            .x(d => x(d.date)) // Tarihi Date objesine çeviriyoruz
+            .x(d => x(d.date))
             .y(d => y(d.value1));
-    
+
         const line2 = d3.line()
-            .x(d => x(d.date)) // Tarihi Date objesine çeviriyoruz
+            .x(d => x(d.date))
             .y(d => y(d.value2));
-    
-        // İlk çizgiyi çizdirme (Value 1)
+
+        // Çizgilerin eklenmesi
         g.append('path')
             .data([data])
             .attr('class', 'line')
@@ -106,8 +108,7 @@
             .attr('stroke', 'steelblue')
             .attr('fill', 'none')
             .attr('stroke-width', 2);
-    
-        // İkinci çizgiyi çizdirme (Value 2)
+
         g.append('path')
             .data([data])
             .attr('class', 'line')
@@ -115,18 +116,18 @@
             .attr('stroke', 'orange')
             .attr('fill', 'none')
             .attr('stroke-width', 2);
-    
+
         // Veri noktalarına yuvarlaklar ekleme (Value 1 için)
         g.selectAll('.circle1')
             .data(data)
             .enter()
             .append('circle')
             .attr('class', 'circle1')
-            .attr('cx', d => x(d.date))  // X ekseninde konum
-            .attr('cy', d => y(d.value1))  // Y ekseninde konum
-            .attr('r', 5)  // Yarıçap
+            .attr('cx', d => x(d.date))
+            .attr('cy', d => y(d.value1))
+            .attr('r', 5)
             .attr('fill', 'steelblue');
-    
+
         // Veri noktalarına yazı ekleme (Value 1 için)
         g.selectAll('.label1')
             .data(data)
@@ -134,23 +135,23 @@
             .append('text')
             .attr('class', 'label1')
             .attr('x', d => x(d.date))
-            .attr('y', d => y(d.value1) - 10)  // Yazının dairenin üstüne yerleştirilme kısmı
+            .attr('y', d => y(d.value1) - 10)
             .attr('text-anchor', 'middle')
             .style('fill', 'steelblue')
             .style('font-size', '10px')
             .text(d => d.value1);
-    
+
         // Veri noktalarına yuvarlaklar ekleme (Value 2 için)
         g.selectAll('.circle2')
             .data(data)
             .enter()
             .append('circle')
             .attr('class', 'circle2')
-            .attr('cx', d => x(d.date))  // X ekseninde konum
-            .attr('cy', d => y(d.value2))  // Y ekseninde konum
-            .attr('r', 5)  // Yarıçap
+            .attr('cx', d => x(d.date))
+            .attr('cy', d => y(d.value2))
+            .attr('r', 5)
             .attr('fill', 'orange');
-    
+
         // Veri noktalarına yazı ekleme (Value 2 için)
         g.selectAll('.label2')
             .data(data)
@@ -158,9 +159,14 @@
             .append('text')
             .attr('class', 'label2')
             .attr('x', d => x(d.date))
-            .attr('y', d => y(d.value2) - 10)  // Yazının dairenin üstüne yerleştirilme kısmı
+            .attr('y', d => y(d.value2) - 10)
             .attr('text-anchor', 'middle')
             .style('fill', 'orange')
             .style('font-size', '10px')
             .text(d => d.value2);
-    };
+    }, [data]); // data değiştiğinde çizimi yeniden yap
+
+    return <svg ref={svgRef} width="100%" height="400px"></svg>;
+};
+
+export default LineChart;
