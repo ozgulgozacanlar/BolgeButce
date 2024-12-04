@@ -1,9 +1,34 @@
+const monthMap = {
+    "Oca": "Jan",
+    "Şub": "Feb",
+    "Mar": "Mar",
+    "Nis": "Apr",
+    "May": "May",
+    "Haz": "Jun",
+    "Tem": "Jul",
+    "Ağu": "Aug",
+    "Eyl": "Sep",
+    "Eki": "Oct",
+    "Kas": "Nov",
+    "Ara": "Dec"
+};
+
+// D3 zaman formatı için Türkçe ay adlarını desteklemek amacıyla timeParse kullanabiliriz.
+const parseDate = d3.timeParse("%b-%y"); // "Kas-23" gibi formatı kabul eder
+
+// Veriyi tarih formatına çevirme
 const updatedData = data.map(d => {
-    const parsedDate = parseDate(d.date); // Tarih parsing işlemi
-    console.log(parsedDate);  // Burada d.date'i parse ediyoruz ve sonucu yazdırıyoruz
+    // Türkçe ay adlarını İngilizce'ye çeviriyoruz
+    const englishMonth = monthMap[d.date.substring(0, 3)];
+    const formattedDate = `${englishMonth}-${d.date.substring(4)}`; // Ayı çevirdikten sonra formatı oluşturuyoruz
+    const parsedDate = parseDate(formattedDate); // Burada tarihi parse ediyoruz
+    console.log(parsedDate);  // Burada date objesini yazdırıyoruz
+
     return {
         date: parsedDate, // Burada tarihleri dönüştürüyoruz
         value1: d.value1,
         value2: d.value2
     };
 }).filter(d => d.date !== null);  // null olmayan tarihleri almak
+
+console.log(updatedData);  // Güncellenmiş veriyi yazdırıyoruz
