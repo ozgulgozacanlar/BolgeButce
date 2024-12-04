@@ -1,3 +1,84 @@
+  const drawLineChart = () => {
+        const svg = d3.select(svgRef.current);
+        svg.selectAll('*').remove();
+        const margin = { top: 20, right: 20, bottom: 100, left: 20 };
+        const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
+        const height = svg.node().getBoundingClientRect().height - margin.top - margin.bottom;
+    
+        const g = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
+    
+        // Tarih formatını uygun bir Date objesine dönüştüren parse fonksiyonu
+        const parseDate = d3.timeParse("%b-%y");  // "%b-%y" Jan-23 gibi formatları işlemek için
+    
+        // Y ekseninin üst sınırını biraz genişletmek için maksimum değerin üzerine ekleme yapalım
+        const maxValue = d3.max(data, d => Math.max(d.value1, d.value2));
+        const yMax = Math.ceil(maxValue / 20) * 20 + 20;
+    
+        const x = d3.scaleTime()
+            .domain(d3.extent(data, d => parseDate(translateMonthToEnglish(d.date))))  // Türkçe tarihleri İngilizce'ye çevirip parse ediyoruz
+            .range([50, width]);
+    
+        const y = d3.scaleLinear()
+            .domain([0, yMax])
+            .nice()
+            .range([height, 0]);
+    
+        const xAxis = d3.axisBottom(x)
+            .tickValues(   // Her bir tarih sadece bir kez görünsün
+                Array.from(new Set(data.map(d => {
+                    const translatedDate = translateMonthToEnglish(d.date);
+                    const parsedDate = parseDate(translatedDate);
+                    return parsedDate ? parsedDate.getTime() : null;  // null kontrolü ekleniyor
+                })))
+                .filter(d => d !== null)  // null değerleri atıyoruz
+                .map(d => new Date(d))  // Set içerisindeki tarihleri tekrar Date objelerine dönüştürüyoruz
+            )
+            .tickFormat(d3.timeFormat("%b %y"))  // Ay ve yıl formatında gösterecek şekilde düzenliyoruz
+            .tickSize(0);
+    
+        const yAxis = d3.axisLeft(y)
+            .tickValues(d3.range(0, yMax, 20))
+            .tickSize(-width);
+    
+        g.append('g')
+            .attr('class', 'x-axis')
+            .attr('transform', `translate(0, ${height})`)
+            .call(xAxis);
+    
+        g.append('g')
+            .attr('class', 'y-axis')
+            .call(yAxis)
+            .selectAll('.domain')
+            .remove();
+    
+        g.selectAll('.y-axis .tick line')
+            .style('stroke', '#d3d3d3')
+            .style('stroke-width', 1);
+    
+        const line1 = d3.line()
+            .x(d => x(parseDate(translateMonthToEnglish(d.date))))  // Tarihleri parse ediyoruz
+            .y(d => y(d.value1));
+    
+        const line2 = d3.line()
+            .x(d => x(parseDate(translateMonthToEnglish(d.date))))  // Tarihleri parse ediyoruz
+            .y(d => y(d.value2));
+    
+        g.append('path')
+            .data([data])
+            .attr('class', 'line')
+            .attr('d', line1)
+            .attr('stroke', '#2b85c9')
+            .attr('fill', 'none')
+            .attr('stroke-width', 2);
+    
+        g.append('path')
+            .data([data])
+            .attr('class', 'line')
+            .attr('d', line2)
+            .attr('stroke', '#a1c789')
+            .attr('fill', 'none')
+            .attr('stroke-width', 2)
+            .attr('stroke-dasharray','1,2')
     
         g.selectAll('.circle1')
             .data(data)
@@ -7,6 +88,74 @@
             .attr('cx', d => x(parseDate(translateMonthToEnglish(d.date))))
             .attr('cy', d => y(d.value1))
             .attr('r', 5)
-               .attr('fill', 'none')  // İçini boş bırakıyoruz
-    .attr('stroke', '#2b85c9')  // Kenarlık rengini mavi yapıyoruz
-    .attr('stroke-width', 2);  // Kenarlık kalınlığı
+            .attr('fill', 'none')  // İçi boş 
+            .attr('stroke', '#2b85c9')  // Kenarlık rengi mavi 
+            .attr('stroke-width', 1.5);  
+    
+        g.selectAll('.label1')
+            .data(data)
+            .enter()
+            .append('text')
+            .attr('class', 'label1')
+            .attr('x', d => x(parseDate(translateMonthToEnglish(d.date))))
+            .attr('y', d => y(d.value1) - 10)
+            .attr('text-anchor', 'middle')
+            .style('fill', '#2b85c9')
+            .style('font-size', '10px')
+            .text(d => d.value1);
+    
+        g.selectAll('.circle2')
+            .data(data)
+            .enter()
+            .append('circle')
+            .attr('class', 'circle2')
+            .attr('cx', d => x(parseDate(translateMonthToEnglish(d.date))))
+            .attr('cy', d => y(d.value2))
+            .attr('r', 5)
+            .attr('fill', 'none')  // İçi boş 
+            .attr('stroke', '#a1c789')  // Kenarlık rengi mavi 
+            .attr('stroke-width', 1.5);  
+    
+        g.selectAll('.label2')
+            .data(data)
+            .enter()
+            .append('text')
+            .attr('class', 'label2')
+            .attr('x', d => x(parseDate(translateMonthToEnglish(d.date))))
+            .attr('y', d => y(d.value2) - 10)
+            .attr('text-anchor', 'middle')
+            .style('fill', '#a1c789')
+            .style('font-size', '10px')
+            .text(d => d.value2);
+    
+        const legend = g.append('g')
+            .attr('transform', `translate(${width / 2 - 80}, ${height + 40})`);
+    
+        legend.append('rect')
+            .attr('x', -15)
+            .attr('y', -10)
+            .attr('width', 10)
+            .attr('height', 10)
+            .attr('fill', '#2b85c9');
+    
+        legend.append('text')
+            .attr('x', 0)
+            .attr('y', 0)
+            .style('fill', '#2b85c9')
+            .style('font-size', '12px')
+            .text('Bölge');
+    
+        legend.append('rect')
+            .attr('x', 65)
+            .attr('y', -10)
+            .attr('width', 10)
+            .attr('height', 10)
+            .attr('fill', '#a1c789');
+    
+        legend.append('text')
+            .attr('x', 80)
+            .attr('y', 0)
+            .style('fill', '#a1c789')
+            .style('font-size', '12px')
+            .text('Ortalama');
+    };
