@@ -1,9 +1,7 @@
-   .attr("fill", (d) => {
-        // Burada d.region veya d.branch gibi bir veri kontrolü yapabilirsiniz
-        if (d.type === "region") {
-            return "blue"; // Bölgeye mavi renk
-        } else if (d.type === "branch") {
-            return "green"; // Şubeye yeşil renk
-        }
-        return "gray"; // Varsayılan renk
-    });
+  g.append('path')
+            .data([data])
+            .attr('class', 'line')
+            .attr('d', line2)
+            .attr('stroke', '#a1c789')
+            .attr('fill', 'none')
+            .attr('stroke-width', 2);
